@@ -1,4 +1,5 @@
 package com.example.projeto_web.Model;
+import com.example.projeto_web.Model.PedidodeCompraEvent;
 
 public class PedidodeCompraEvent {
 
@@ -26,22 +27,4 @@ public class PedidodeCompraEvent {
         this.total = total;
     }
 
-    public Double getTotal() {
-
-        Double total = 0.0;
-
-        if (itens != null) {
-
-            for (ItemPedido item : itens) {
-
-                if (item.getQuantidade() != null
-                        && item.getValorUnitario() != null) {
-
-                    total = total + (item.getQuantidade() * item.getValorUnitario());
-                }
-            }
-        }
-
-        return total;
-    }
 }

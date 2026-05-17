@@ -38,7 +38,17 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>3.0.3 </version> <!-- Use a versão mais recente -->
+			<version>3.0.3 </version>
+		</dependency>
+
+		<dependency>
+	        <groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		 </dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
 
 		<dependency>

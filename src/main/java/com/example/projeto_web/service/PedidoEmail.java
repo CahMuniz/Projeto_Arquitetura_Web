@@ -1,4 +1,4 @@
-package com.example.projeto_web.service;
+package com.example.projeto_web.Service;
 import com.example.projeto_web.dto.PedidoEvenDTO;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.SimpleMailMessage;

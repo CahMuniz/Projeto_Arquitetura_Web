@@ -1,4 +1,4 @@
-package com.example.projeto_web.service;
+package com.example.projeto_web.Service;
 
 public class ProdutoService  {
 }

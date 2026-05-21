@@ -1,4 +1,4 @@
-package com.example.projeto_web.model;
+package com.example.projeto_web.Model;
 
 public class ProdutoEntity {
 }

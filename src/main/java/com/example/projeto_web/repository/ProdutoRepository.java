@@ -1,4 +1,4 @@
-package com.example.projeto_web.repository;
+package com.example.projeto_web.Repository;
 
 public interface ProdutoRepository {
 }

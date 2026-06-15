@@ -10,13 +10,12 @@ O sistema é composto por microsserviços independentes, cada um com responsabil
 
 | Nome | Módulo |
 |------|--------|
-| Gustavo Alves | Inventory Service |
+| Gustavo Alves | Category Service |
 | Victor Andrey | Auth Service |
 | Ana Carolina Muniz | Cart Service |
 | Álax Fernando de Freitas Nunes | Inventory Service (Módulo Principal) |
-| Ryan Junio Pereira Costa | Inventory Service |
-| Carolina Soares | Inventory Service |
-| Joao Victor Lima | Inventory Service |
+| Ryan Junio Pereira Costa | Email Service/Payment Service |
+
 
 ---
 

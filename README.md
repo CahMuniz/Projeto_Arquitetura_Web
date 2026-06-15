@@ -481,3 +481,101 @@ Gustavo de Souza Alves
 Análise e Desenvolvimento de Sistemas – 2026
 | JUnit 5 + Mockito | Testes unitários e de integração |
 | Maven | Gerenciamento de dependências |
+
+
+# Relato Pessoal – Microserviço de Inventário
+
+**Autor:** Alax Fernando  
+**Curso:** Análise e Desenvolvimento de Sistemas (ADS)  
+**Disciplina:** Arquitetura de Dispositivos Móveis e Microserviços  
+**Professor:** Sândalo Bessa  
+
+---
+
+## Sobre o Projeto
+
+Neste projeto, participei do desenvolvimento de uma arquitetura baseada em microsserviços utilizando **Spring Boot**, **Apache Kafka**, **PostgreSQL** e outras tecnologias voltadas para aplicações distribuídas. Minha principal responsabilidade foi a criação e desenvolvimento do **Microserviço de Inventory (Estoque)**, responsável por gerenciar o controle de produtos disponíveis, quantidades em estoque e atualização das informações de disponibilidade da loja.
+
+O **Inventory Service** foi projetado para funcionar de forma totalmente independente dos demais componentes da aplicação, possuindo sua própria base de dados e regras de negócio, seguindo os princípios fundamentais da arquitetura de microsserviços. Seu papel é garantir que o estoque permaneça consistente durante todo o fluxo de compras, fornecendo informações atualizadas para os demais serviços da plataforma.
+
+---
+
+## Desenvolvimento
+
+Durante a implementação, desenvolvi os endpoints REST responsáveis pelas operações de cadastro, consulta, atualização e gerenciamento dos produtos armazenados no estoque. O serviço foi estruturado utilizando boas práticas de desenvolvimento com Spring Boot, separando as camadas de **Controller**, **Service**, **Repository** e **Model**, proporcionando maior organização, manutenibilidade e reutilização do código.
+
+Para a persistência dos dados foi utilizado o **PostgreSQL**, mantendo uma base exclusiva para o serviço de estoque, evitando compartilhamento direto de informações com outros microsserviços e respeitando o princípio de autonomia de dados.
+
+Também participei da integração do **Inventory Service** com os demais componentes da arquitetura por meio de eventos, permitindo que alterações realizadas durante o processo de compra atualizem automaticamente a disponibilidade dos produtos e mantenham a sincronização entre catálogo, carrinho e estoque.
+
+Além disso, foram implementadas validações para impedir inconsistências, como:
+
+- Controle de quantidades negativas;
+- Atualização automática da disponibilidade dos produtos;
+- Validação de estoque antes da confirmação de pedidos;
+- Proteção contra alterações inválidas;
+- Gerenciamento seguro das operações de entrada e saída de estoque.
+
+---
+
+## Desafios e Aprendizados
+
+Um dos principais desafios encontrados durante o desenvolvimento foi compreender a comunicação entre microsserviços e a sincronização de informações em tempo real. Garantir que o estoque refletisse corretamente as operações realizadas pelos demais serviços exigiu atenção especial à arquitetura orientada a eventos e ao desacoplamento entre aplicações.
+
+Outro desafio importante foi configurar o ambiente utilizando **Docker** e **Docker Compose**, garantindo que todos os serviços e bancos de dados se comunicassem corretamente sem conflitos de portas ou dependências.
+
+Com este projeto, aprofundei meus conhecimentos em:
+
+- Arquitetura de Microsserviços e separação de responsabilidades;
+- Desenvolvimento de APIs REST com Spring Boot;
+- Persistência de dados utilizando PostgreSQL e Spring Data JPA;
+- Comunicação assíncrona entre serviços utilizando Apache Kafka;
+- Integração entre microsserviços baseada em eventos;
+- Organização de projetos em arquitetura em camadas;
+- Conteinerização de aplicações com Docker e Docker Compose;
+- Gerenciamento de dependências utilizando Maven;
+- Controle de versões com Git e GitHub.
+
+---
+
+## Conclusão
+
+O desenvolvimento do **Microserviço de Inventory** representou uma experiência extremamente enriquecedora para minha formação acadêmica e profissional. A oportunidade de construir um serviço independente, integrado aos demais componentes da aplicação e responsável por uma área crítica do sistema permitiu consolidar conhecimentos importantes sobre desenvolvimento distribuído e arquitetura moderna de software.
+
+Além do aprendizado técnico, o projeto reforçou a importância da colaboração entre equipes, da padronização de interfaces e da comunicação eficiente entre microsserviços para construção de aplicações escaláveis, robustas e de fácil manutenção.
+
+Considero que essa experiência ampliou significativamente minha visão sobre o desenvolvimento de sistemas corporativos e me preparou para enfrentar desafios reais do mercado de tecnologia, especialmente em projetos que utilizam arquiteturas baseadas em microsserviços.
+
+---
+
+## Tecnologias Utilizadas
+
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- PostgreSQL
+- Apache Kafka
+- Maven
+- Docker
+- Docker Compose
+- APIs REST
+- Git
+- GitHub
+
+---
+
+## Autor
+
+**Alax Fernando**  
+*Análise e Desenvolvimento de Sistemas – 2026*
+
+**Especialização no projeto:**
+
+- 📦 Inventory Service
+- 🗄️ PostgreSQL
+- ☕ Spring Boot
+- 🔄 Apache Kafka
+- 🐳 Docker & Docker Compose
+- 🌐 APIs REST
+- 🏗️ Arquitetura de Microsserviços
+- 📚 Maven

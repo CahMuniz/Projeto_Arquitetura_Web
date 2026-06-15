@@ -579,3 +579,15 @@ Considero que essa experiência ampliou significativamente minha visão sobre o 
 - 🌐 APIs REST
 - 🏗️ Arquitetura de Microsserviços
 - 📚 Maven
+
+ ## Autor
+**Ryan Junio Pereira Costa**  
+*Ciências da Computação – 2026*
+
+Durante o desenvolvimento deste projeto, tive a oportunidade de aprofundar de forma prática meus conhecimentos em Arquitetura de Microsserviços, compreendendo como sistemas distribuídos se comunicam de maneira assíncrona, escalável e eficiente.
+
+Minha atuação principal concentrou-se na construção e integração do Payment Service (Microsserviço de Pagamento) e do Notification Service (Microsserviço de Notificação). Esse processo me permitiu dominar o ecossistema do Spring Boot 3 e enfrentar desafios reais de engenharia de software, como a mensageria assíncrona utilizando o Apache Kafka para a transmissão de eventos entre os serviços, a persistência de históricos de transações no banco de dados MongoDB, e a integração com servidores SMTP externos para o disparo real de e-mails corporativos via JavaMailSender.
+
+Um dos maiores aprendizados dessa experiência foi lidar com a depuração de fluxos integrados e a organização de logs limpos para auditoria visual, garantindo que o comportamento do sistema reflita fielmente as regras de negócio propostas.
+
+Esta trajetória contribuiu significativamente para meu crescimento acadêmico e profissional nesta reta final de formação. O projeto consolidou conceitos teóricos complexos por meio da prática direta, reforçando a importância do planejamento arquitetural, da separação de responsabilidades e da resiliência na construção de soluções de software modernas, robustas e prontas para o mercado.

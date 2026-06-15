@@ -1,91 +1,406 @@
-﻿
+# 🏪 Projeto Final — Arquitetura de Aplicações Web
 
-![Imagem_de_ilustrativa_Microsservicos](https://miro.medium.com/v2/resize:fit:640/format:webp/0*UsLvMyqVxwyIipSz)
+Plataforma de e-commerce de moda social desenvolvida como projeto final da disciplina de **Arquitetura de Aplicações Web** — Newton Paiva.
 
+O sistema é composto por microsserviços independentes, cada um com responsabilidade bem definida, comunicando-se de forma assíncrona via **Apache Kafka**.
 
+---
 
+## 👥 Equipe
 
-Projeto de Arquitetura de Microsserviços
+| Nome | Módulo |
+|------|--------|
+| Gustavo Alves | Inventory Service |
+| Victor Andrey | Auth Service |
+| Ana Carolina Muniz | Cart Service |
+| Álax Fernando de Freitas Nunes | Inventory Service (Módulo Principal) |
+| Ryan Junio Pereira Costa | Inventory Service |
+| Carolina Soares | Inventory Service |
+| Joao Victor Lima | Inventory Service |
 
- 
-# Bibliotecas utilizadas
-<ul>
-    <li>
- Random
- </li>
-    <li>
- Scanner
- </li>
+---
 
-</ul>
-<i>
-Versão 17 do JDK. <br>
- Professor - Sândalo Bessa
-<ul>
-<br>
-Alunos responsáveis:
+## 🗺️ Visão Geral da Arquitetura
 
-<li>
-Ryan Junio Pereira Costa
-</li>
-<li>
-Carolina Soares
-</li>
-<li>
-Gustavo Alves
-</li>
-<li>
-Victor Andrey
-</li>
-<li>
-João Victor Lima
-</li>
-<li>
-Alax Fernando
-</li>
+```
+Cliente
+   │
+   ▼
+Auth Service ──────────────────────► JWT Token
+   │
+   ▼
+Cart Service ──────► Kafka (order-topic) ──────► Outros Serviços
+   │
+   ▼
+Catalog Service ◄─── Kafka (loja-pedido-criado) ◄─── Serviço Principal
+   │
+   ├──► grupo-email     → Notification Service (e-mail ao cliente)
+   │
+   └──► grupo-catalog   → Atualização de estoque no MongoDB
+   │
+   ▼
+Inventory Service ──► PostgreSQL
+   │
+   ▼
+Payment Service ────► Kafka (lojavintage-pedidos) ──► Notification Service
+```
 
+---
 
-</ul>
+## 📦 Microsserviços
 
-</i>
+---
 
-# Para Rodar  o Projeto
-<div>
- <ul> 
-   <li>  
-Passo 1 
-      <br> 
-  Copie o Código do Repositório .
-   </li>  
-<li>  
-Passo 2   
-  <br> 
-  abra  o Intellij ou à Ide da sua Preferência.
-</li>
-   <li>  
-Passo 3
-      <br> 
-  o Cole Código no Intellij ou na sua Ide de Preferência.
- </li>
-  <li>  
- Passo 4
-     <br> 
-Clique no botão Run no Canto Superior Direito da Ide.
-</li>
-</ul>
-  </div>
+### 1. 🔐 Auth Service
 
-# Documentação
+Microsserviço de autenticação responsável pelo cadastro de usuários, login e controle de acesso por perfil.
 
-• Documentação:
+**Tecnologias:** Java 21 · Spring Boot · Spring Security · JWT · MySQL · Maven
 
+#### Endpoints
 
-     https://docs.oracle.com/javase/8/docs/api/java/util/Random.html     
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/auth/register` | Cadastro de novo usuário |
+| `POST` | `/auth/login` | Login — retorna token JWT |
+| `GET` | `/user` | Área do usuário (requer JWT) |
+| `GET` | `/admin` | Área administrativa (requer JWT + perfil ADMIN) |
 
+#### Exemplo — Cadastro
 
-#  Vídeo Demonstrativo
+```json
+POST /auth/register
+{
+  "nome": "João",
+  "email": "joao@email.com",
+  "senha": "123456"
+}
+```
 
+#### Exemplo — Login
 
-# Dependências
+```json
+POST /auth/login
+{
+  "email": "joao@email.com",
+  "senha": "123456"
+}
 
-Java
+// Retorna:
+{
+  "token": "jwt-token"
+}
+```
+
+#### Banco de Dados
+
+**MySQL** — Tabela `users`
+
+| Campo | Tipo |
+|-------|------|
+| id | PK |
+| nome | String |
+| email | String |
+| senha | String (hash) |
+| role | Enum (USER / ADMIN) |
+
+---
+
+### 2. 🛒 Cart Service
+
+Microsserviço responsável pelo gerenciamento do carrinho de compras, incluindo checkout e publicação de eventos via Kafka.
+
+**Tecnologias:** Java 17 · Spring Boot 3 · Spring Data MongoDB · Apache Kafka · Swagger/OpenAPI · Maven
+
+#### Estrutura do Projeto
+
+```
+controller/CartController.java
+service/CartService.java
+repository/CartRepository.java
+model/
+  ├── Cart.java
+  ├── CartItem.java
+  └── Order.java
+kafka/
+  ├── CartProducer.java
+  └── CartConsumer.java
+```
+
+#### Endpoints
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/cart` | Criar carrinho |
+| `GET` | `/cart/{userId}` | Buscar carrinho do usuário |
+| `POST` | `/cart/{userId}/items` | Adicionar item |
+| `DELETE` | `/cart/{userId}/items/{productName}` | Remover item |
+| `PUT` | `/cart/{userId}/items/{productName}?quantity=3` | Atualizar quantidade |
+| `DELETE` | `/cart/{userId}` | Limpar carrinho |
+| `POST` | `/cart/{userId}/checkout` | Finalizar compra |
+
+#### Exemplo de documento no MongoDB
+
+```json
+{
+  "_id": "123",
+  "userId": "user01",
+  "items": [
+    {
+      "productName": "Terno Slim Preto",
+      "quantity": 2,
+      "price": 499.90
+    }
+  ],
+  "total": 999.80
+}
+```
+
+#### Integração Kafka
+
+| Tópico | Ação |
+|--------|------|
+| `cart-topic` | Publica informações do carrinho |
+| `order-topic` | Publica pedidos finalizados |
+
+O consumer escuta `cart-topic` e exibe usuário, total, produtos, quantidade e preço.
+
+---
+
+### 3. 📦 Catalog Service
+
+Microsserviço responsável pela gestão do catálogo da loja: categorias, produtos disponíveis e vitrines de destaque. Consome eventos Kafka para sincronização de estoque em tempo real.
+
+**Tecnologias:** Java 21 · Spring Boot 3.4.5 · Spring Data MongoDB · Apache Kafka · Spring Cache · Docker
+
+#### Estrutura do Projeto
+
+```
+catalog-service/
+├── dockerfile
+├── docker-compose.yml
+├── pom.xml
+└── src/main/java/com/example/category/
+    ├── model/         (Categoria, Produto, Vitrine)
+    ├── repository/    (CategoriaRepository, ProdutoRepository, VitrineRepository)
+    ├── service/       (CategoriaService, ProdutoService, VitrineService)
+    ├── controller/    (CategoriaController, ProdutoController, VitrineController)
+    ├── dto/           (ProdutoDTO, VitrineDTO, PedidoEventDTO)
+    └── kafka/         (EstoqueEventConsumer)
+```
+
+#### Endpoints — Categorias `/catalog/categorias`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/catalog/categorias` | Lista categorias ativas |
+| `POST` | `/catalog/categorias` | Cria nova categoria |
+| `PUT` | `/catalog/categorias/{id}` | Atualiza categoria |
+| `DELETE` | `/catalog/categorias/{id}` | Desativa categoria |
+
+#### Endpoints — Produtos `/catalog/produtos`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/catalog/produtos` | Lista produtos disponíveis |
+| `GET` | `/catalog/produtos/categoria/{categoriaId}` | Lista por categoria |
+| `GET` | `/catalog/produtos/busca?nome=` | Busca por nome |
+| `POST` | `/catalog/produtos` | Cadastra produto |
+| `PUT` | `/catalog/produtos/{id}` | Atualiza produto |
+| `DELETE` | `/catalog/produtos/{id}` | Remove produto |
+
+#### Endpoints — Vitrines `/catalog/vitrines`
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `GET` | `/catalog/vitrines` | Lista vitrines ativas (com cache) |
+| `POST` | `/catalog/vitrines` | Cria vitrine |
+| `PUT` | `/catalog/vitrines/{id}` | Atualiza vitrine |
+| `DELETE` | `/catalog/vitrines/{id}` | Desativa vitrine e invalida cache |
+
+#### Integração Kafka
+
+O consumer `EstoqueEventConsumer` escuta o tópico `loja-pedido-criado` (group-id `grupo-catalog`). Para cada pedido recebido, atualiza o estoque e o campo `disponivel` de cada produto no MongoDB.
+
+#### Executando
+
+```bash
+# Subir tudo com Docker Compose
+docker-compose up --build
+
+# Rodar apenas a infraestrutura (para desenvolvimento local)
+docker-compose up mongodb kafka zookeeper
+./mvnw spring-boot:run
+```
+
+> Swagger disponível em: `http://localhost:8080/swagger-ui.html`
+
+---
+
+### 4. 📋 Inventory Service
+
+Microsserviço RESTful responsável pelo controle completo de estoque de roupas sociais masculinas e femininas da plataforma Divenclasse.
+
+**Tecnologias:** Java 17 · Spring Boot 3.3.0 · Spring Data JPA · Hibernate · PostgreSQL 16 · Docker · Swagger/OpenAPI · JUnit 5 · Mockito
+
+#### Endpoints
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| `POST` | `/products` | Cadastrar produto |
+| `GET` | `/products` | Listar todos (paginado) |
+| `GET` | `/products/{id}` | Buscar por ID |
+| `GET` | `/products/search?name=` | Buscar por nome |
+| `GET` | `/products/category/{c}` | Buscar por categoria |
+| `GET` | `/products/size/{s}` | Buscar por tamanho |
+| `GET` | `/products/gender/{g}` | Buscar por gênero |
+| `GET` | `/products/low-stock` | Produtos com estoque baixo |
+| `PUT` | `/products/{id}` | Atualização completa |
+| `PATCH` | `/products/{id}/stock` | Atualizar estoque |
+| `DELETE` | `/products/{id}` | Excluir produto |
+
+#### Entidade Product
+
+| Campo | Tipo | Obrigatório | Descrição |
+|-------|------|-------------|-----------|
+| id | Long | Auto | Gerado automaticamente |
+| nome | String | ✅ | Nome do produto |
+| descricao | String | — | Descrição detalhada |
+| categoria | Enum | ✅ | Categoria do produto |
+| tamanho | String | ✅ | Tamanho |
+| cor | String | ✅ | Cor principal |
+| preco | BigDecimal | ✅ | Preço (> 0) |
+| quantidadeEstoque | Integer | ✅ | Quantidade disponível |
+| marca | String | — | Marca |
+| genero | Enum | ✅ | MASCULINO / FEMININO / UNISSEX |
+| dataCadastro | LocalDateTime | Auto | Imutável após criação |
+| dataAtualizacao | LocalDateTime | Auto | Atualizada automaticamente |
+
+#### Categorias disponíveis
+
+```
+TERNO · BLAZER · CAMISA_SOCIAL · CALCA_SOCIAL
+GRAVATA · SAPATO_SOCIAL · CINTO · COLETE
+```
+
+#### Regras de Negócio
+
+- Estoque nunca negativo
+- Campo `emEstoque` calculado automaticamente
+- Alerta para estoque baixo (≤ 3)
+- `dataCadastro` imutável após criação
+- Preço obrigatoriamente maior que zero
+- Bean Validation em todos os campos obrigatórios
+- Paginação em listagens
+
+#### Tratamento de Erros
+
+| Exceção | HTTP |
+|---------|------|
+| ProductNotFoundException | 404 |
+| InsufficientStockException | 422 |
+| MethodArgumentNotValidException | 400 |
+| Exception | 500 |
+
+```json
+// Exemplo de resposta de erro
+{
+  "timestamp": "2025-05-27T10:30:00",
+  "status": 404,
+  "error": "Not Found",
+  "message": "Produto não encontrado com ID: 5",
+  "path": "/products/5"
+}
+```
+
+#### Testes
+
+```
+10 tests passed / 10 total — BUILD SUCCESS
+```
+
+Utilizando JUnit 5, Mockito e H2 (banco em memória para testes).
+
+#### Executando
+
+```bash
+# Subir containers (PostgreSQL na porta 5432, serviço na porta 8085)
+docker compose up --build
+
+# Swagger
+http://localhost:8085/swagger-ui.html
+```
+
+---
+
+### 5. 💳 Payment Service
+
+Microsserviço responsável pelo processamento de fluxos de pagamento e publicação de eventos para outros serviços reagirem de forma assíncrona.
+
+**Tecnologias:** Java 17 · Spring Boot 3 · Spring Kafka · JUnit 5 · Spring Boot Test
+
+#### Funcionamento
+
+Ao processar um pagamento, o serviço converte os dados do pedido (ID, Nome, E-mail, Produto, Valor e Status) em JSON e publica de forma assíncrona no tópico `lojavintage-pedidos` do Kafka.
+
+#### Teste de Integração
+
+O teste `PaymentServiceApplicationTests` interage diretamente com o ambiente Docker:
+- Conecta ao broker Kafka real na porta `9092`
+- Dispara um cenário de pagamento **APROVADO** com payload JSON válido
+- Garante que o broker receba a mensagem e o Notification Service processe o envio de e-mail de ponta a ponta
+
+---
+
+### 6. 📨 Notification Service
+
+Microsserviço responsável por escutar eventos de pagamento, registrar histórico de transações e disparar e-mails de confirmação via Gmail.
+
+**Tecnologias:** Java 17 · Spring Boot 3 · Spring Kafka · Spring Data MongoDB · Spring Boot Starter Mail (JavaMailSender)
+
+#### Fluxo de Negócio
+
+1. **Consumo de Eventos** — escuta o tópico `lojavintage-pedidos` via Kafka
+2. **Persistência** — grava cada pedido no MongoDB (`lojavintage_db`) para auditoria
+3. **Disparo de E-mail** — analisa o status do pagamento:
+   - `APROVADO` → monta e envia e-mail de confirmação ao cliente via SMTP Gmail
+   - Falha / Recusado → registra logs de erro no console
+
+#### Status no Console
+
+```
+🟢 STATUS: E-MAIL ENVIADO COM SUCESSO
+🔴 STATUS: E-MAIL NÃO ENVIADO (Falha no disparo do servidor)
+```
+
+---
+
+## 🔄 Fluxo Completo de uma Compra
+
+```
+1. Cliente faz login → Auth Service emite JWT
+2. Cliente adiciona produtos → Cart Service gerencia carrinho
+3. Cliente finaliza compra → Cart Service publica em order-topic
+4. Payment Service processa pagamento → publica em lojavintage-pedidos
+5. Notification Service consome evento → salva no MongoDB + envia e-mail
+6. Catalog Service consome loja-pedido-criado → atualiza estoque no MongoDB
+7. Inventory Service reflete alterações de estoque via PostgreSQL
+```
+
+---
+
+## 🛠️ Stack Tecnológica Geral
+
+| Tecnologia | Uso |
+|------------|-----|
+| Java 17 / 21 | Linguagem principal |
+| Spring Boot 3 | Framework base |
+| Spring Security + JWT | Autenticação e autorização |
+| Apache Kafka | Mensageria assíncrona entre serviços |
+| MongoDB | Persistência NoSQL (Cart, Catalog, Notification) |
+| PostgreSQL | Persistência relacional (Inventory) |
+| MySQL | Persistência relacional (Auth) |
+| Docker / Docker Compose | Containerização |
+| Swagger / OpenAPI | Documentação das APIs |
+| JUnit 5 + Mockito | Testes unitários e de integração |
+| Maven | Gerenciamento de dependências |

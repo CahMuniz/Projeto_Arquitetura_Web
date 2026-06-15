@@ -405,30 +405,43 @@ Microsserviço responsável por escutar eventos de pagamento, registrar históri
 
 ## Relatos Pessoais:
 
-# Relato Pessoal – Microserviço de Carrinho (Cart Service)
+# Relato Pessoal – Microserviço de Carrinho de Compras
 
-Relato Pessoal – Microserviço de Carrinho de Compras
-Autora: Ana Carolina Muniz Soares
-Curso: Análise e Desenvolvimento de Sistemas (ADS)
-Disciplina: Arquitetura de Dispositivos Móveis e Microserviços
-Professor: Sândalo
-Sobre o Projeto
-Neste projeto, participei do desenvolvimento de uma arquitetura baseada em microserviços utilizando Spring Boot, Apache Kafka e MongoDB. Minha principal responsabilidade foi a criação do Microserviço de Carrinho de Compras, responsável por armazenar e gerenciar os produtos adicionados pelos usuários.
-Desenvolvimento
-Durante a implementação, desenvolvi os endpoints para operações de cadastro, consulta e atualização dos itens do carrinho. Para a persistência dos dados, foi utilizado o MongoDB, que ofereceu flexibilidade na modelagem das informações.
-Além disso, participei da integração com o Apache Kafka, permitindo a comunicação assíncrona entre os microserviços por meio de eventos. Essa abordagem tornou a aplicação mais desacoplada, organizada e escalável.
-Desafios e Aprendizados
-Um dos principais desafios foi compreender a configuração do Kafka e o fluxo de mensagens entre os serviços. Também foi necessário entender a integração entre o Spring Boot e o MongoDB para garantir a persistência correta dos dados.
-Com este projeto, aprofundei meus conhecimentos em:
-Arquitetura de Microserviços;
-Apache Kafka;
-MongoDB;
-APIs REST com Spring Boot;
-Docker e Docker Compose.
-Conclusão
+**Autora:** Ana Carolina Muniz Soares
+**Curso:** Análise e Desenvolvimento de Sistemas (ADS)
+**Disciplina:** Arquitetura de Dispositivos Móveis e Microserviços
+**Professor:** Sândalo
+
+---
+
+## Sobre o Projeto
+
+Neste projeto, participei do desenvolvimento de uma arquitetura baseada em microserviços utilizando Spring Boot, Apache Kafka e MongoDB. Minha principal responsabilidade foi a criação do **Microserviço de Carrinho de Compras**, responsável por armazenar e gerenciar os produtos adicionados pelos usuários.
+
+## Desenvolvimento
+
+Durante a implementação, desenvolvi os endpoints para operações de cadastro, consulta e atualização dos itens do carrinho. Para a persistência dos dados, foi utilizado o **MongoDB**, que ofereceu flexibilidade na modelagem das informações. Além disso, participei da integração com o **Apache Kafka**, permitindo a comunicação assíncrona entre os microserviços por meio de eventos. Essa abordagem tornou a aplicação mais desacoplada, organizada e escalável.
+
+## Desafios e Aprendizados
+
+Um dos principais desafios foi compreender a configuração do Kafka e o fluxo de mensagens entre os serviços. Também foi necessário entender a integração entre o Spring Boot e o MongoDB para garantir a persistência correta dos dados. Com este projeto, aprofundei meus conhecimentos em:
+
+- Arquitetura de Microserviços;
+- Apache Kafka;
+- MongoDB;
+- APIs REST com Spring Boot;
+- Docker e Docker Compose.
+
+## Conclusão
+
 A construção do Microserviço de Carrinho de Compras foi uma experiência importante para minha formação acadêmica, permitindo aplicar na prática conceitos modernos de desenvolvimento distribuído e comunicação entre serviços, ampliando minha experiência com tecnologias amplamente utilizadas no mercado.
+
+---
+
 Ana Carolina Muniz Soares
 Análise e Desenvolvimento de Sistemas – 2026
+
+
 
 # Relato Pessoal – Microserviço de Catálogo (Catalog Service)
 

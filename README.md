@@ -403,7 +403,9 @@ Microsserviço responsável por escutar eventos de pagamento, registrar históri
 | Swagger / OpenAPI | Documentação das APIs |
 
 
-## Realatos Pessoais:
+## Relatos Pessoais:
+
+# Relato Pessoal – Microserviço de Carrinho (Cart Service)
 
 Relato Pessoal – Microserviço de Carrinho de Compras
 Autora: Ana Carolina Muniz Soares
@@ -426,6 +428,43 @@ Docker e Docker Compose.
 Conclusão
 A construção do Microserviço de Carrinho de Compras foi uma experiência importante para minha formação acadêmica, permitindo aplicar na prática conceitos modernos de desenvolvimento distribuído e comunicação entre serviços, ampliando minha experiência com tecnologias amplamente utilizadas no mercado.
 Ana Carolina Muniz Soares
+Análise e Desenvolvimento de Sistemas – 2026
+
+# Relato Pessoal – Microserviço de Catálogo (Catalog Service)
+
+**Autor:** Gustavo de Souza Alves
+**Curso:** Análise e Desenvolvimento de Sistemas (ADS)
+**Disciplina:** Arquitetura de Dispositivos Móveis e Microserviços
+**Professor:** Sândalo
+
+---
+
+## Sobre o Projeto
+
+Neste projeto, participei do desenvolvimento de uma arquitetura baseada em microserviços utilizando Spring Boot, Apache Kafka e MongoDB. Minha principal responsabilidade foi a criação do **Microserviço de Catálogo (Catalog Service)**, desenvolvido como uma extensão independente do serviço principal da aplicação. Esse microserviço é responsável por gerenciar as **Categorias**, os **Produtos** disponíveis na loja e as **Vitrines** de destaque, funcionando como a camada de apresentação do catálogo para o cliente final.
+
+## Desenvolvimento
+
+Durante a implementação, desenvolvi os endpoints REST para operações de cadastro, consulta, atualização e desativação dos recursos de Categoria, Produto e Vitrine. Para a persistência dos dados, utilizei o **MongoDB** com banco de dados próprio e isolado (`catalog-db`), seguindo o princípio fundamental de que microserviços não devem compartilhar bases de dados. Implementei também o sistema de **cache com Spring Cache**, aplicado nas vitrines ativas para reduzir consultas desnecessárias ao banco. Outro ponto relevante foi a integração com o **Apache Kafka**, por meio do `EstoqueEventConsumer`, que consome os eventos publicados pelo serviço principal sempre que um pedido é realizado, atualizando automaticamente a disponibilidade dos produtos no catálogo em tempo real.
+
+## Desafios e Aprendizados
+
+Um dos principais desafios foi compreender o funcionamento do Kafka na prática, especialmente a configuração de `group-id` distintos para que o microserviço de catálogo recebesse os mesmos eventos de forma independente do serviço de e-mail. Outro desafio foi a configuração do ambiente com **Docker e Docker Compose**, lidando com conflitos de porta entre os containers e a comunicação interna entre serviços usando os nomes definidos no `docker-compose.yml` no lugar de `localhost`. Com este projeto, aprofundei meus conhecimentos em:
+
+- Arquitetura de Microserviços e isolamento de responsabilidades;
+- Apache Kafka e comunicação assíncrona entre serviços;
+- MongoDB e modelagem de dados com Spring Data;
+- APIs REST com Spring Boot seguindo boas práticas de camadas;
+- Cache de dados com Spring Cache (`@Cacheable` e `@CacheEvict`);
+- Docker e Docker Compose para containerização de aplicações.
+
+## Conclusão
+
+A construção do Microserviço de Catálogo foi uma experiência fundamental para minha formação acadêmica, pois permitiu aplicar na prática conceitos modernos de desenvolvimento distribuído que são amplamente exigidos pelo mercado. Compreender como serviços independentes se comunicam por eventos, mantêm seus próprios dados e escalam de forma isolada ampliou significativamente minha visão sobre arquitetura de software e me preparou para desafios reais do desenvolvimento profissional.
+
+---
+
+Gustavo de Souza Alves
 Análise e Desenvolvimento de Sistemas – 2026
 | JUnit 5 + Mockito | Testes unitários e de integração |
 | Maven | Gerenciamento de dependências |
